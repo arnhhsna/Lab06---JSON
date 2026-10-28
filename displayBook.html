@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Records</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        select {
+            padding: 10px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+
+        #bookDetails {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+        }
+
+        #message {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Book Records</h1>
+
+    <label for="bookSelect">Select a book title:</label>
+
+    <br><br>
+
+    <select id="bookSelect">
+        <option value="">-- Select a Book --</option>
+    </select>
+
+    <div id="bookDetails">
+        <p>Please select a book to view its details.</p>
+    </div>
+
+    <p id="message"></p>
+
+    <script>
+
+        const jsonURL = 
+
+
+        const bookSelect = document.getElementById("bookSelect");
+        const bookDetails = document.getElementById("bookDetails");
+        const message = document.getElementById("message");
+
+        let books = [];
+
+        // Fetch JSON data from GitHub
+        fetch(jsonURL)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Unable to retrieve the JSON file.");
+                }
+
+                return response.json();
+            })
+            .then(data => {
+
+                // Store the book records
+                books = data.Books;
+
+                // Add each book title to the dropdown list
+                books.forEach(book => {
+                    const option = document.createElement("option");
+
+                    option.value = book.title;
+                    option.textContent = book.title;
+
+                    bookSelect.appendChild(option);
+                });
+
+                console.log("Book records loaded successfully.");
+                console.log(books);
+            })
+            .catch(error => {
+                message.textContent =
+                    "Error loading book records. Please check the JSON URL.";
+
+                console.error("Error:", error);
+            });
+
+        // Search for the selected book and display its details
+        bookSelect.addEventListener("change", function () {
+
+            const selectedTitle = bookSelect.value;
+
+            // Clear previous messages
+            message.textContent = "";
+
+            // Check whether a book title has been selected
+            if (selectedTitle === "") {
+                bookDetails.innerHTML =
+                    "<p>Please select a book to view its details.</p>";
+                return;
+            }
+
+            // Find the matching book in the JSON data
+            const selectedBook = books.find(book =>
+                book.title === selectedTitle
+            );
+
+            // Display the selected book's details
+            if (selectedBook) {
+
+                bookDetails.innerHTML = `
+                    <h2>${selectedBook.title}</h2>
+
+                    <p>
+                        <strong>Author:</strong>
+                        ${selectedBook.author}
+                    </p>
+
+                    <p>
+                        <strong>Publication Year:</strong>
+                        ${selectedBook.publicationYear}
+                    </p>
+
+                    <p>
+                        <strong>Genres:</strong>
+                        ${selectedBook.genre.join(", ")}
+                    </p>
+                `;
+
+            } else {
+
+                bookDetails.innerHTML = "";
+                message.textContent =
+                    "Book not found. Please select another title.";
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
