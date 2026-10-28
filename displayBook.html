@@ -57,7 +57,7 @@
     <script>
 
         const jsonURL = 
-
+        "https://raw.githubusercontent.com/arnhhsna/Lab06---JSON/refs/heads/main/book.json";
 
         const bookSelect = document.getElementById("bookSelect");
         const bookDetails = document.getElementById("bookDetails");
@@ -65,7 +65,6 @@
 
         let books = [];
 
-        // Fetch JSON data from GitHub
         fetch(jsonURL)
             .then(response => {
                 if (!response.ok) {
@@ -76,10 +75,8 @@
             })
             .then(data => {
 
-                // Store the book records
                 books = data.Books;
 
-                // Add each book title to the dropdown list
                 books.forEach(book => {
                     const option = document.createElement("option");
 
@@ -99,27 +96,22 @@
                 console.error("Error:", error);
             });
 
-        // Search for the selected book and display its details
         bookSelect.addEventListener("change", function () {
 
             const selectedTitle = bookSelect.value;
 
-            // Clear previous messages
             message.textContent = "";
 
-            // Check whether a book title has been selected
             if (selectedTitle === "") {
                 bookDetails.innerHTML =
                     "<p>Please select a book to view its details.</p>";
                 return;
             }
 
-            // Find the matching book in the JSON data
             const selectedBook = books.find(book =>
                 book.title === selectedTitle
             );
 
-            // Display the selected book's details
             if (selectedBook) {
 
                 bookDetails.innerHTML = `
